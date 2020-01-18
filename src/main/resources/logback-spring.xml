@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径 -->
+    <property name="rootPath" value="logs" />
+    <property name="backupDir" value="backup" />
+    <property name="serverName" value="akali-oauth2-server" />
+    <!-- 控制台输出 -->
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] [%-5p] %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${rootPath}/${serverName}_error.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>
+                ${rootPath}/${backupDir}/${serverName}_error-%d{yyyy-MM-dd}-%i.log.gz
+            </FileNamePattern>
+            <MaxHistory>7</MaxHistory>
+            <TimeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <MaxFileSize>100MB</MaxFileSize>
+            </TimeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%-5p] %logger{36} %caller{3} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    
+    <!-- security测试的控制台输出级别 -->
+    <appender name="securityAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] [%-5p] %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+
+    <!-- 日志输出级别 -->
+    <root level="debug">
+        <appender-ref ref="errorAppender" />
+        <appender-ref ref="consoleAppender" />
+    </root>
+    <logger name="com.github.barry.akali" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="securityAppender"/>
+        <appender-ref ref="errorAppender"/>
+    </logger>
+        <logger name="org.springframework.security" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="securityAppender"/>
+        <appender-ref ref="errorAppender"/>
+    </logger>
+</configuration>
