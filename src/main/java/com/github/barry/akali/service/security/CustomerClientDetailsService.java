@@ -107,6 +107,7 @@ public class CustomerClientDetailsService implements ClientDetailsService {
         Set<String> grantTypeSet = clientGrantTypesList.stream()//
                 .map(ClientGrantTypes::getGrantTypes)//
                 .filter(Objects::nonNull)//
+                .filter(GrantTypes::getIsActive)//
                 .map(GrantTypes::getGrantTypeCode)//
                 .filter(StringUtils::hasText) //
                 .distinct() //
@@ -127,6 +128,7 @@ public class CustomerClientDetailsService implements ClientDetailsService {
         Set<String> resourcesSet = clientResourcesList.stream()//
                 .map(ClientResources::getCustomerResource)//
                 .filter(Objects::nonNull)//
+                .filter(CustomerResource::getIsActive)//
                 .map(CustomerResource::getResourceCode)//
                 .filter(StringUtils::hasText) //
                 .distinct() //

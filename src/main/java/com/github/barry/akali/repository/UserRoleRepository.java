@@ -17,6 +17,6 @@ import com.github.barry.akali.entity.UserRole;
 @Repository
 public interface UserRoleRepository extends JpaRepository<UserRole, Integer> {
 
-    List<UserRole> findByUserId(Integer id);
+    List<UserRole> findByUserIdAndIsActive(Integer id, Boolean isActive);
 
 }

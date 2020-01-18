@@ -44,7 +44,7 @@ public class CustomerUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.debug("进入自定义的CustomerUserDetailsService，username={}", username);
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsernameAndIsActive(username, Boolean.TRUE);
         if (Objects.isNull(user)) {
             throw new UsernameNotFoundException("用户" + username + " 不存在于系统中");
         }
@@ -60,10 +60,11 @@ public class CustomerUserDetailsService implements UserDetailsService {
      */
     private Collection<GrantedAuthority> getRoleByUser(User user) {
         Collection<GrantedAuthority> roleList = new ArrayList<>();
-
-        List<UserRole> userRoleList = userRoleRepository.findByUserId(user.getId());
+        List<UserRole> userRoleList = userRoleRepository.findByUserIdAndIsActive(user.getId(), Boolean.TRUE);
         userRoleList.forEach(ur -> {
-            roleList.add(new SimpleGrantedAuthority(ur.getRole().getRoleCode()));
+            if (Objects.equals(Boolean.TRUE, ur.getRole().getIsActive())) {
+                roleList.add(new SimpleGrantedAuthority(ur.getRole().getRoleCode()));
+            }
         });
         if (CollectionUtils.isEmpty(roleList)) {
             roleList.add(new SimpleGrantedAuthority(defaultRole));
