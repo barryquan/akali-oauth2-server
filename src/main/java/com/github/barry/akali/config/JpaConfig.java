@@ -1,0 +1,28 @@
+package com.github.barry.akali.config;
+
+import java.util.Optional;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+
+import com.github.barry.akali.utils.UserUtils;
+
+/**
+ * 开启jpa自动填充创建人、创建时间、更新人、更新时间的配置
+ *
+ * @author barry
+ */
+@Configuration
+@EnableJpaAuditing
+public class JpaConfig {
+
+    /**
+     * 实现AuditorAware接口，这样才会填充创建和更新的操作人
+     */
+    @Bean
+    public AuditorAware<String> auditorAware() {
+        return () -> Optional.ofNullable(UserUtils.getCurrentUser());
+    }
+}

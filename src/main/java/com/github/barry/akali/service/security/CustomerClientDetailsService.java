@@ -64,6 +64,9 @@ public class CustomerClientDetailsService implements ClientDetailsService {
         }
         OauthClient oauthClient = oauthClientRepository.findByClientIdAndIsActive(clientId, Boolean.TRUE);
 
+        if (Objects.isNull(oauthClient)) {
+            throw new ClientRegistrationException("can not find " + clientId + " details");
+        }
         BaseClientDetails clientDetails = new BaseClientDetails();
         clientDetails.setClientSecret(passwordEncoder.encode(oauthClient.getClientSecret()));
         Set<String> resourceSet = getResourcesByClientId(clientId);
@@ -74,8 +77,8 @@ public class CustomerClientDetailsService implements ClientDetailsService {
         clientDetails.setScope(Arrays.asList(DEFAULT_SCOPE));
         clientDetails.setAccessTokenValiditySeconds(oauthClient.getAccessTokenValidity());
         clientDetails.setRefreshTokenValiditySeconds(oauthClient.getRefreshTokenValidity());
-        ClientDetailsCacheUtils.saveClientDetailsCache(clientId, clientDetails);
         clientDetails.setRegisteredRedirectUri(getRedirectUri(oauthClient));
+        ClientDetailsCacheUtils.saveClientDetailsCache(clientId, clientDetails);
         return clientDetails;
     }
 

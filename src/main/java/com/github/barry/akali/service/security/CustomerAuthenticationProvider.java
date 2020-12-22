@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -45,7 +45,7 @@ public class CustomerAuthenticationProvider implements AuthenticationProvider {
             log.debug("传上来的自定义信息为={}", map);
         }
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new DisabledException("用户名或密码错误.");
+            throw new BadCredentialsException("用户名或密码错误.");
         }
         return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
     }

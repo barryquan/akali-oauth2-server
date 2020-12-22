@@ -52,7 +52,7 @@ public class CustomerAuthorizationCodeServices extends RandomValueAuthorizationC
         if (Objects.isNull(oauthCode) || Objects.equals(Boolean.FALSE, oauthCode.getIsActive())) {
             return null;
         }
-        oauthCodeRepository.deleteById(oauthCode.getId());
+        oauthCodeRepository.delete(oauthCode);
         OAuth2Authentication auth = SerializationUtils.deserialize(oauthCode.getAuthentication());
         return auth;
     }

@@ -3,13 +3,24 @@ package com.github.barry.akali.base;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
+
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 基础实体信息<br>
@@ -20,7 +31,9 @@ import lombok.Setter;
  */
 @Setter
 @Getter
+@ToString
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity implements Serializable {
 
     /**
@@ -31,14 +44,33 @@ public abstract class BaseEntity implements Serializable {
     /** 实体ID, 主键 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
+
+    /**
+     * 创建人
+     */
+    @CreatedBy
+    protected String createdBy;
 
     /** 实体创建时间 */
-    protected LocalDateTime createdDate = LocalDateTime.now();
+    @CreatedDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ssS")
+    protected LocalDateTime createdDate;
+
+    /**
+     * 更新人
+     */
+    @LastModifiedBy
+    protected String lastModifiedBy;
 
     /** 实体更新时间 */
-    protected LocalDateTime modifiedDate;
+    @LastModifiedDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    protected LocalDateTime lastModifiedDate;
 
     /** 实体删除标记，为false表示删除 */
     protected Boolean isActive = Boolean.TRUE;
+
+    @Version
+    private Integer version = 0;
 }

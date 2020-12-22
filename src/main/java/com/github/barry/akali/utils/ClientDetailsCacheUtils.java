@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version 1.0
  */
 @Slf4j
-public class ClientDetailsCacheUtils {
+public abstract class ClientDetailsCacheUtils {
 
     private static final Map<String, ClientDetails> cacheMap = new HashMap<>();
 

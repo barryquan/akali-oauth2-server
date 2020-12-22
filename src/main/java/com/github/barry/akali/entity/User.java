@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * 登录用户实体
+ * 用户
  * 
  * @author barry
  * @date 创建时间：2020年1月2日 下午5:58:32
@@ -34,7 +34,18 @@ public class User extends BaseEntity {
     private String username;
 
     /**
+     * 密保手机
+     */
+    private String secretPhone;
+
+    /**
+     * 密保邮箱
+     */
+    private String secretEmail;
+
+    /**
      * 密码
      */
     private String password;
+
 }
